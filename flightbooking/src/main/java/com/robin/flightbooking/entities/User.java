@@ -22,7 +22,7 @@ public class User {
     @Column(name = "phone_number", length = 10)
     private String phoneNumber;
 
-    @Column(name = "password_login", length = 30)
+    @Column(name = "password_login", length = 100)
     private String password;
 
     public User(){};
@@ -47,11 +47,14 @@ public class User {
     public String getFirstName(){
         return firstName;
     }
-
     public String getLastName(){
         return lastName;
     }
     public String getPhoneNumber(){
         return phoneNumber;
+    }
+
+    public void setPassword(String pass){
+        this.password = pass;
     }
 }
