@@ -9,7 +9,6 @@ public class BookingRequest {
     public String getFlightId() {
         return flightId;
     }
-
     public User getUser() {
         return user;
     }
