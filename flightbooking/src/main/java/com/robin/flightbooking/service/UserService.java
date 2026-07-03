@@ -3,8 +3,10 @@ package com.robin.flightbooking.service;
 
 
 import com.robin.flightbooking.entities.User;
+import com.robin.flightbooking.exception.EmailAlreadyExistsException;
+import com.robin.flightbooking.exception.UserNotFoundException;
+import com.robin.flightbooking.exception.InvalidPasswordException;
 import com.robin.flightbooking.repository.UserRepository;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -12,8 +14,8 @@ import org.springframework.stereotype.Service;
 @Service
 public class UserService {
 
-    private UserRepository userRepository;
-    private PasswordEncoder passwordEncoder;
+    private final UserRepository userRepository;
+    private final PasswordEncoder passwordEncoder;
 
     public UserService(UserRepository userRepository,
                        PasswordEncoder passwordEncoder){
@@ -22,33 +24,30 @@ public class UserService {
     }
 
 
-    public void signUp(User user){
+    public String signUp(User user){
         User existing = userRepository.findByEmail(user.getEmail());
 
         if(existing != null){
-            System.out.println("Email already registered.");
+            throw new EmailAlreadyExistsException("Email is already registered.");
         }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         userRepository.save(user);
-        System.out.println("Registration successful.");
+        return "User registered successful";
     }
 
-    public void login(String email, String password){
+    public String login(String email, String password){
         User user = userRepository.findByEmail(email);
 
         if(user == null){
-            System.out.println("Email not registered.Try Signing Up");
-            return;
+            throw new UserNotFoundException("Email not registered");
         }
 
-        if(passwordEncoder.matches(password,user.getPassword())){
-            System.out.println("Successfully logged in!");
-        }
-        else{
-            System.out.println("Invalid Password");
+        if(!passwordEncoder.matches(password,user.getPassword())){
+            throw new InvalidPasswordException("Invalid Password");
         }
 
+        return "Login successfully";
     }
 
 
