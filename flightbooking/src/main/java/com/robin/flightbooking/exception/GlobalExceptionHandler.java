@@ -50,4 +50,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(exception.getMessage());
     }
+
+    @ExceptionHandler(NoAvailableFlights.class)
+    public ResponseEntity<String> noAvailableFLightException(
+            NoAvailableFlights exception){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(exception.getMessage());
+    }
+
+
 }
