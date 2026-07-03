@@ -51,9 +51,30 @@ public class GlobalExceptionHandler {
                 .body(exception.getMessage());
     }
 
-    @ExceptionHandler(NoAvailableFlights.class)
+    @ExceptionHandler(NoAvailableFlightsException.class)
     public ResponseEntity<String> noAvailableFLightException(
-            NoAvailableFlights exception){
+            NoAvailableFlightsException exception){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(exception.getMessage());
+    }
+
+    @ExceptionHandler(FlightNotFoundException.class)
+    public ResponseEntity<String> flightNotFoundException(
+            FlightNotFoundException exception){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(exception.getMessage());
+    }
+
+    @ExceptionHandler(SeatNotAvailableException.class)
+    public ResponseEntity<String> seatNotAvailableException(
+            SeatNotAvailableException exception){
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(exception.getMessage());
+    }
+
+    @ExceptionHandler(BookingNotFoundException.class)
+    public ResponseEntity<String> bookingNotFoundException(
+            BookingNotFoundException exception){
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
                 .body(exception.getMessage());
     }

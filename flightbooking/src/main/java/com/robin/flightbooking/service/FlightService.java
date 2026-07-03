@@ -1,7 +1,7 @@
 package com.robin.flightbooking.service;
 
 import com.robin.flightbooking.entities.Flight;
-import com.robin.flightbooking.exception.NoAvailableFlights;
+import com.robin.flightbooking.exception.NoAvailableFlightsException;
 import com.robin.flightbooking.repository.FlightRepository;
 import org.springframework.stereotype.Service;
 
@@ -36,7 +36,7 @@ public class FlightService {
         }
 
         if(result.isEmpty()){
-            throw new NoAvailableFlights("There are no available flights available from "
+            throw new NoAvailableFlightsException("There are no available flights available from "
                                         + src + " -> " + dest + " on " + date);
         }
 
