@@ -4,7 +4,11 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
+import lombok.Getter;
+import lombok.Setter;
 
+@Getter
+@Setter
 public class SignupRequest {
 
     @NotBlank(message = "First name is required")
@@ -34,23 +38,6 @@ public class SignupRequest {
     )
     private String password;
 
-
-
-    public String getEmail(){
-        return email;
-    }
-    public String getPassword(){
-        return password;
-    }
-    public String getFirstName(){
-        return firstName;
-    }
-    public String getLastName(){
-        return lastName;
-    }
-    public String getPhoneNumber(){
-        return phoneNumber;
-    }
 
 
 }

@@ -1,8 +1,17 @@
 package com.robin.flightbooking.entities;
 
 import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import java.time.LocalDate;
+
+
+
+@Getter
+@Setter
+@NoArgsConstructor
 
 @Entity
 @Table(name="bookings")
@@ -27,7 +36,6 @@ public class Booking {
     @Column(name="total_amount")
     private double totalAmount;
 
-    public Booking(){};
 
     public Booking(String flightId, String email, String seatNumber,
                    LocalDate bookingDate, double totalAmount){
@@ -39,23 +47,6 @@ public class Booking {
         this.totalAmount = totalAmount;
     }
 
-    public String getBookingId(){
-        return bookingId;
-    }
-    public String getBookingUserEmail(){
-        return bookingUserEmail;
-    }
-    public String getFlightId(){
-        return flightId;
-    }
-    public String getSeatNumber(){
-        return seatNumber;
-    }
-    public LocalDate getBookingDate(){
-        return bookingDate;
-    }
-    public double getBookingAmount(){
-        return totalAmount;
-    }
+
 }
 
