@@ -11,6 +11,7 @@ import com.robin.flightbooking.repository.BookingRepository;
 import com.robin.flightbooking.repository.FlightRepository;
 import com.robin.flightbooking.repository.UserRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -30,14 +31,12 @@ public class BookingService {
     }
 
 
-
+    @Transactional
     public String bookFlight(String flightId, User user){
         Flight flight = flightRepository.findByFlightId(flightId);
-
         if(flight == null){
             throw new FlightNotFoundException("No flight exists with this flight Id");
         }
-
         if(flight.getAvailableSeats() <= 0){
             throw new SeatNotAvailableException("No seats are available on this flight");
         }
@@ -56,11 +55,10 @@ public class BookingService {
                 LocalDate.now(),
                 flight.getBaseFare() + gst);
 
-        bookingRepository.save(booking);
 
+        bookingRepository.save(booking);
         return "Flight Booked Successfully.";
     }
-
 
     public List<Booking> getUserBookings(String email){
         User user = userRepository.findByEmail(email);
@@ -71,24 +69,21 @@ public class BookingService {
         return bookingRepository.findBookingByBookingUserEmail(email);
     }
 
-
+    @Transactional
     public String cancelBooking(String bookingId){
 
         Booking bookingToDelete = bookingRepository.findById(bookingId)
                 .orElseThrow(()->
                     new BookingNotFoundException("No Booking was found with this Booking Id."));
 
-
-
         String flightId = bookingToDelete.getFlightId();
         Flight flight = flightRepository.findByFlightId(flightId);
 
         Integer newSeatCapacity = flight.getAvailableSeats() + 1;
         flight.setAvailableSeats(newSeatCapacity);
-
-        bookingRepository.deleteById(bookingId);
         flightRepository.save(flight);
 
+        bookingRepository.deleteById(bookingId);
         return "Your booking has been successfully cancelled";
     }
 

@@ -26,7 +26,6 @@ public class UserService {
 
     public String signUp(User user){
         User existing = userRepository.findByEmail(user.getEmail());
-
         if(existing != null){
             throw new EmailAlreadyExistsException("Email is already registered.");
         }
@@ -38,11 +37,9 @@ public class UserService {
 
     public String login(String email, String password){
         User user = userRepository.findByEmail(email);
-
         if(user == null){
             throw new UserNotFoundException("Email not registered");
         }
-
         if(!passwordEncoder.matches(password,user.getPassword())){
             throw new InvalidPasswordException("Invalid Password");
         }

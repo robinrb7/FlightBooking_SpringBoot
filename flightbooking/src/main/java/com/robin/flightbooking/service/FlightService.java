@@ -39,11 +39,7 @@ public class FlightService {
             throw new NoAvailableFlightsException("There are no available flights available from "
                                         + src + " -> " + dest + " on " + date);
         }
-
         return result;
     }
-
-
-
 
 }
