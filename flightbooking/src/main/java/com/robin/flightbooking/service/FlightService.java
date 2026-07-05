@@ -1,5 +1,7 @@
 package com.robin.flightbooking.service;
 
+import com.robin.flightbooking.dto.requestdto.SearchRequest;
+import com.robin.flightbooking.dto.responsedto.SearchFlightsResponse;
 import com.robin.flightbooking.entities.Flight;
 import com.robin.flightbooking.exception.NoAvailableFlightsException;
 import com.robin.flightbooking.repository.FlightRepository;
@@ -23,8 +25,8 @@ public class FlightService {
         flightRepository.save(flight);
     }
 
-    public List<Flight> searchFlight(String src, String dest, LocalDate date){
-        List<Flight> result = new ArrayList<>();
+    public List<SearchFlightsResponse> searchFlight(String src, String dest, LocalDate date){
+        List<SearchFlightsResponse> result = new ArrayList<>();
         List<Flight> allFlights = flightRepository.findAll();
 
         for(Flight flight: allFlights){
@@ -32,7 +34,18 @@ public class FlightService {
             if( flight.getSource().equalsIgnoreCase(src) &&
                 flight.getDestination().equalsIgnoreCase(dest) &&
                 flight.getDate().equals(date)
-            ) result.add(flight);
+            ) {
+                SearchFlightsResponse flightsResponse = new SearchFlightsResponse(
+                        flight.getFlightId(),
+                        flight.getSource(),
+                        flight.getDestination(),
+                        flight.getDepartureTime(),
+                        flight.getDate(),
+                        flight.getAvailableSeats(),
+                        flight.getBaseFare()
+                );
+                result.add(flightsResponse);
+            };
         }
 
         if(result.isEmpty()){

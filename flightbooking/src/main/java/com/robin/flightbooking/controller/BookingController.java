@@ -1,8 +1,8 @@
 package com.robin.flightbooking.controller;
 
-import com.robin.flightbooking.dto.BookingRequest;
-import com.robin.flightbooking.dto.CancelRequest;
-import com.robin.flightbooking.dto.ViewBookingRequest;
+import com.robin.flightbooking.dto.requestdto.BookingRequest;
+import com.robin.flightbooking.dto.requestdto.CancelRequest;
+import com.robin.flightbooking.dto.requestdto.ViewBookingRequest;
 import com.robin.flightbooking.entities.Booking;
 import com.robin.flightbooking.service.BookingService;
 import jakarta.validation.Valid;
@@ -26,7 +26,7 @@ public class BookingController {
     public ResponseEntity<String> bookFlight(@Valid @RequestBody BookingRequest bookingRequest){
         return ResponseEntity
                 .ok(bookingService.
-                        bookFlight(bookingRequest.getFlightId(),bookingRequest.getUser()));
+                        bookFlight(bookingRequest.getFlightId(),bookingRequest.getEmail()));
     }
 
     @PostMapping("/cancel")
@@ -37,7 +37,7 @@ public class BookingController {
 
 
     @PostMapping("/view")
-    public ResponseEntity<List<Booking>> viewBookings(@Valid @RequestBody ViewBookingRequest viewBookingRequest){
+    public ResponseEntity<?> viewBookings(@Valid @RequestBody ViewBookingRequest viewBookingRequest){
         return ResponseEntity
                 .ok(bookingService.getUserBookings(viewBookingRequest.getEmail()));
     }

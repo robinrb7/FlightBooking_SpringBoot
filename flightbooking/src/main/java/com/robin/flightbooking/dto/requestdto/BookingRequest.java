@@ -1,6 +1,6 @@
-package com.robin.flightbooking.dto;
+package com.robin.flightbooking.dto.requestdto;
 
-import com.robin.flightbooking.entities.User;
+import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -14,7 +14,8 @@ public class BookingRequest {
     @NotBlank(message = "Flight Id is required")
     private String flightId;
 
-    @NotNull(message = "User is required")
-    private User user;
+    @NotNull(message = "Email is required")
+    @Email(message = "Email not correctly formated")
+    private String email;
 
 }

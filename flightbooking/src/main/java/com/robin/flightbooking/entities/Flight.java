@@ -1,9 +1,7 @@
 package com.robin.flightbooking.entities;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -11,6 +9,7 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 
 @Getter
 @Setter
@@ -42,6 +41,8 @@ public class Flight {
     @Column(name="base_fare")
     private double baseFare;
 
-
+    @OneToMany(mappedBy = "flight")
+    @JsonIgnore
+    private List<Booking> bookings;
 
 }

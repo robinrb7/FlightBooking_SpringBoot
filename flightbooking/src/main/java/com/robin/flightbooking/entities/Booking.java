@@ -21,12 +21,6 @@ public class Booking {
     @Column(name="bookingId",length=40)
     private String bookingId;
 
-    @Column(name="flightId",length=20)
-    private String flightId;
-
-    @Column(name="user_email",length=40)
-    private String bookingUserEmail;
-
     @Column(name="seat_number",length=10)
     private String seatNumber;
 
@@ -37,15 +31,21 @@ public class Booking {
     private double totalAmount;
 
 
-    public Booking(String flightId, String email, String seatNumber,
+    public Booking( String seatNumber,
                    LocalDate bookingDate, double totalAmount){
 
-        this.flightId = flightId;
-        this.bookingUserEmail = email;
         this.seatNumber = seatNumber;
         this.bookingDate = bookingDate;
         this.totalAmount = totalAmount;
     }
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "flight_id")
+    private Flight flight;
 
 
 }

@@ -1,5 +1,6 @@
 package com.robin.flightbooking.service;
 
+import com.robin.flightbooking.dto.responsedto.BookingResponse;
 import com.robin.flightbooking.entities.Booking;
 import com.robin.flightbooking.entities.Flight;
 import com.robin.flightbooking.entities.User;
@@ -14,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -32,7 +34,7 @@ public class BookingService {
 
 
     @Transactional
-    public String bookFlight(String flightId, User user){
+    public String bookFlight(String flightId, String email){
         Flight flight = flightRepository.findByFlightId(flightId);
         if(flight == null){
             throw new FlightNotFoundException("No flight exists with this flight Id");
@@ -44,29 +46,54 @@ public class BookingService {
 
         String seatNum = "S" + flight.getAvailableSeats();
         flight.setAvailableSeats(flight.getAvailableSeats()-1);
-        flightRepository.save(flight);
+
 
         double gst = 0.18 * flight.getBaseFare();
 
         Booking booking = new Booking(
-                flightId,
-                user.getEmail(),
                 seatNum,
                 LocalDate.now(),
                 flight.getBaseFare() + gst);
 
+        User user = userRepository.findByEmail(email);
+        if(user==null){
+            throw new UserNotFoundException("No user registered with this email");
+        }
+
+        //Establish relationships
+        booking.setFlight(flight);
+        booking.setUser(user);
 
         bookingRepository.save(booking);
         return "Flight Booked Successfully.";
     }
 
-    public List<Booking> getUserBookings(String email){
+    public List<BookingResponse> getUserBookings(String email){
         User user = userRepository.findByEmail(email);
         if(user == null){
             throw new UserNotFoundException("No User found registered with this email.");
         }
 
-        return bookingRepository.findBookingByBookingUserEmail(email);
+        List<Booking> bookingList =  bookingRepository.findByUser(user);
+        List<BookingResponse> responseList = new ArrayList<>();
+
+        for(Booking booking: bookingList){
+            BookingResponse response = new BookingResponse(
+                    booking.getBookingId(),
+                    booking.getUser().getEmail(),
+                    booking.getUser().getFirstName()+ " " + booking.getUser().getLastName(),
+                    booking.getFlight().getFlightId(),
+                    booking.getFlight().getSource(),
+                    booking.getFlight().getDestination(),
+                    booking.getSeatNumber(),
+                    booking.getBookingDate(),
+                    booking.getTotalAmount()
+            );
+
+            responseList.add(response);
+        }
+
+        return responseList;
     }
 
     @Transactional
@@ -76,14 +103,11 @@ public class BookingService {
                 .orElseThrow(()->
                     new BookingNotFoundException("No Booking was found with this Booking Id."));
 
-        String flightId = bookingToDelete.getFlightId();
-        Flight flight = flightRepository.findByFlightId(flightId);
 
-        Integer newSeatCapacity = flight.getAvailableSeats() + 1;
-        flight.setAvailableSeats(newSeatCapacity);
-        flightRepository.save(flight);
+        Flight flight = bookingToDelete.getFlight();
+        flight.setAvailableSeats(flight.getAvailableSeats() + 1);
 
-        bookingRepository.deleteById(bookingId);
+        bookingRepository.delete(bookingToDelete);
         return "Your booking has been successfully cancelled";
     }
 

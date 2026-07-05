@@ -1,7 +1,7 @@
 package com.robin.flightbooking.controller;
 
-import com.robin.flightbooking.dto.LoginRequest;
-import com.robin.flightbooking.dto.SignupRequest;
+import com.robin.flightbooking.dto.requestdto.LoginRequest;
+import com.robin.flightbooking.dto.requestdto.SignupRequest;
 import com.robin.flightbooking.entities.User;
 import com.robin.flightbooking.service.UserService;
 import jakarta.validation.Valid;

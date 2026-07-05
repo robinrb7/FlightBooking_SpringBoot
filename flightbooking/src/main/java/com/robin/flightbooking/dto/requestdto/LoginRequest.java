@@ -1,4 +1,4 @@
-package com.robin.flightbooking.dto;
+package com.robin.flightbooking.dto.requestdto;
 // dto -> Data Transfer Object, made for representing data coming from or going to client.
 
 import lombok.Getter;

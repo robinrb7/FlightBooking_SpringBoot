@@ -1,9 +1,10 @@
 package com.robin.flightbooking.controller;
 
-import com.robin.flightbooking.dto.SearchRequest;
+import com.robin.flightbooking.dto.requestdto.SearchRequest;
 import com.robin.flightbooking.entities.Flight;
 import com.robin.flightbooking.service.FlightService;
 import jakarta.validation.Valid;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -19,11 +20,12 @@ public class FlightController {
     public FlightController(FlightService flightService){this.flightService = flightService;}
 
     @PostMapping("/search")
-    public List<Flight> searchFlight( @Valid @RequestBody SearchRequest searchRequest){
-        return flightService.searchFlight(
+    public ResponseEntity<?> searchFlight(@Valid @RequestBody SearchRequest searchRequest){
+        return ResponseEntity
+                .ok(flightService.searchFlight(
                 searchRequest.getSource(),
                 searchRequest.getDestination(),
-                searchRequest.getDate());
+                searchRequest.getDate()));
     }
 
     @PostMapping("/save")

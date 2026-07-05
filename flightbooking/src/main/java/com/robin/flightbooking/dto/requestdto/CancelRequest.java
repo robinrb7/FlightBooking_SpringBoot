@@ -1,4 +1,4 @@
-package com.robin.flightbooking.dto;
+package com.robin.flightbooking.dto.requestdto;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
