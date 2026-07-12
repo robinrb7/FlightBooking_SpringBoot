@@ -15,7 +15,7 @@ public class BookingRequest {
     private String flightId;
 
     @NotNull(message = "Email is required")
-    @Email(message = "Email not correctly formated")
+    @Email(message = "Email not correctly formatted")
     private String email;
 
 }

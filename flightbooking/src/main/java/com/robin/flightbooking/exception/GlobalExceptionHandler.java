@@ -2,6 +2,7 @@ package com.robin.flightbooking.exception;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -76,6 +77,22 @@ public class GlobalExceptionHandler {
     public ResponseEntity<String> bookingNotFoundException(
             BookingNotFoundException exception){
         return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(exception.getMessage());
+    }
+
+    @ExceptionHandler(InvalidJwtException.class)
+    public ResponseEntity<String> invalidJwtException(
+            InvalidJwtException exception){
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(exception.getMessage());
+    }
+
+    @ExceptionHandler(JwtTokenExpirationException.class)
+    public ResponseEntity<String> expiredJwtException(
+            JwtTokenExpirationException exception){
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
                 .body(exception.getMessage());
     }
 

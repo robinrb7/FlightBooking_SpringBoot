@@ -2,8 +2,9 @@ package com.robin.flightbooking.controller;
 
 import com.robin.flightbooking.dto.requestdto.LoginRequest;
 import com.robin.flightbooking.dto.requestdto.SignupRequest;
+import com.robin.flightbooking.dto.responsedto.LoginResponseDto;
 import com.robin.flightbooking.entities.User;
-import com.robin.flightbooking.service.UserService;
+import com.robin.flightbooking.service.AuthService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -14,11 +15,11 @@ import org.springframework.web.bind.annotation.RestController;
 
 
 @RestController
-@RequestMapping("/users")
-public class UserController {
+@RequestMapping("/auth")
+public class AuthController {
 
-    private final UserService userService;  // final -> makes the object immutable
-    public UserController(UserService userService){
+    private final AuthService userService;  // final -> makes the object immutable
+    public AuthController(AuthService userService){
         this.userService = userService;
     }
 
@@ -26,6 +27,7 @@ public class UserController {
     @PostMapping("/signup")
     public ResponseEntity<String> signUp(@Valid @RequestBody SignupRequest signupRequest){
 
+        System.out.println("Signup APi is hit.");
         User user = new User(
                 signupRequest.getFirstName(),
                 signupRequest.getLastName(),
@@ -39,7 +41,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<String> login(@RequestBody LoginRequest loginRequest){
+    public ResponseEntity<LoginResponseDto> login(@RequestBody LoginRequest loginRequest){
         return ResponseEntity
                 .ok(userService.login(loginRequest.getEmail(),loginRequest.getPassword()));
     }
