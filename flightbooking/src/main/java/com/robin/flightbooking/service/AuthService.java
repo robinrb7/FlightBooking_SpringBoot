@@ -3,6 +3,7 @@ package com.robin.flightbooking.service;
 
 
 import com.robin.flightbooking.dto.responsedto.LoginResponseDto;
+import com.robin.flightbooking.entities.RoleEnum;
 import com.robin.flightbooking.entities.User;
 import com.robin.flightbooking.exception.EmailAlreadyExistsException;
 import com.robin.flightbooking.exception.UserNotFoundException;
@@ -35,6 +36,7 @@ public class AuthService  {
         }
 
         user.setPassword(passwordEncoder.encode(user.getPassword()));
+        user.setRole(RoleEnum.ROLE_USER);
         userRepository.save(user);
         return "User registered successful";
     }

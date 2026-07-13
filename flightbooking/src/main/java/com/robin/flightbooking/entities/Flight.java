@@ -14,8 +14,6 @@ import java.util.List;
 @Getter
 @Setter
 @NoArgsConstructor
-@AllArgsConstructor
-
 @Entity
 @Table(name="flights")
 public class Flight {
@@ -45,4 +43,14 @@ public class Flight {
     @JsonIgnore
     private List<Booking> bookings;
 
+
+    public Flight(String flightId, String source, String destination, LocalTime departureTime, LocalDate date, Integer availableSeats, double baseFare) {
+        this.flightId=flightId;
+        this.source=source;
+        this.destination=destination;
+        this.departureTime=departureTime;
+        this.availableSeats=availableSeats;
+        this.date=date;
+        this.baseFare=baseFare;
+    }
 }
