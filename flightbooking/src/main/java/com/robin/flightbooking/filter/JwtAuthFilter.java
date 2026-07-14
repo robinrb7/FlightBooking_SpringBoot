@@ -28,8 +28,6 @@ public class JwtAuthFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
             throws ServletException, IOException {
 
-        System.out.println(request.getRequestURI());
-        System.out.println("JWT Filter Executed");
 
         try {
             final String requestTokenHeader = request.getHeader("Authorization");

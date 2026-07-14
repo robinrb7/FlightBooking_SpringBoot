@@ -2,7 +2,10 @@ package com.robin.flightbooking.service;
 //services handles all the business logic
 
 
+import com.robin.flightbooking.dto.requestdto.RefreshTokenRequest;
 import com.robin.flightbooking.dto.responsedto.LoginResponseDto;
+import com.robin.flightbooking.dto.responsedto.RefreshTokenResponse;
+import com.robin.flightbooking.entities.RefreshToken;
 import com.robin.flightbooking.entities.RoleEnum;
 import com.robin.flightbooking.entities.User;
 import com.robin.flightbooking.exception.EmailAlreadyExistsException;
@@ -27,6 +30,7 @@ public class AuthService  {
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
+    private final RefreshTokenService refreshTokenService;
 
 
     public String signUp(User user){
@@ -47,7 +51,10 @@ public class AuthService  {
         );
 
         User user = (User)authentication.getPrincipal();
-        return new LoginResponseDto(jwtService.generateAccessToken(user), user.getEmail());
+        return new LoginResponseDto(
+                jwtService.generateAccessToken(user),
+                user.getEmail(),
+                refreshTokenService.createRefreshToken(user).getToken());
     }
 
     public User getCurrentUser(){
@@ -55,6 +62,14 @@ public class AuthService  {
                 .getAuthentication();
         User user = (User) authentication.getPrincipal();
         return user;
+    }
+
+    public RefreshTokenResponse refreshToken(String token){
+
+        RefreshToken refreshToken = refreshTokenService.validateRefreshToken(token);
+        String accessToken = jwtService.generateAccessToken(refreshToken.getUser());
+
+        return new RefreshTokenResponse(accessToken);
     }
 
 
