@@ -46,15 +46,19 @@ public class AuthService  {
     }
 
     public LoginResponseDto login(String email, String password){
+
         Authentication authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(email,password)
         );
 
         User user = (User)authentication.getPrincipal();
+        RefreshToken refreshToken = refreshTokenService.createRefreshToken(user);
+        String accessToken = jwtService.generateAccessToken(user);
+
         return new LoginResponseDto(
-                jwtService.generateAccessToken(user),
+                accessToken,
                 user.getEmail(),
-                refreshTokenService.createRefreshToken(user).getToken());
+                refreshToken.getToken());
     }
 
     public User getCurrentUser(){
@@ -70,6 +74,14 @@ public class AuthService  {
         String accessToken = jwtService.generateAccessToken(refreshToken.getUser());
 
         return new RefreshTokenResponse(accessToken);
+    }
+
+
+    public String logout(){
+        User user = getCurrentUser();
+        refreshTokenService.deleteRefreshToken(user);
+
+        return "Logged Out Successfully";
     }
 
 
