@@ -9,4 +9,5 @@ import lombok.Setter;
 @Setter
 public class RefreshTokenResponse {
     private String accessToken;
+    private String refreshToken;
 }

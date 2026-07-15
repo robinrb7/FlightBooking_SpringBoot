@@ -70,10 +70,13 @@ public class AuthService  {
 
     public RefreshTokenResponse refreshToken(String token){
 
-        RefreshToken refreshToken = refreshTokenService.validateRefreshToken(token);
+        RefreshToken refreshToken = refreshTokenService.rotateRefreshToken(token);
         String accessToken = jwtService.generateAccessToken(refreshToken.getUser());
 
-        return new RefreshTokenResponse(accessToken);
+        return new RefreshTokenResponse(
+                accessToken,
+                refreshToken.getToken()
+        );
     }
 
 
