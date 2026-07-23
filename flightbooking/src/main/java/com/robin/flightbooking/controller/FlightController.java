@@ -5,6 +5,7 @@ import com.robin.flightbooking.dto.requestdto.SearchRequest;
 import com.robin.flightbooking.entities.Flight;
 import com.robin.flightbooking.service.FlightService;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -14,6 +15,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequestMapping("/flights")
 public class FlightController {
@@ -23,6 +25,8 @@ public class FlightController {
 
     @PostMapping("/search")
     public ResponseEntity<?> searchFlight(@Valid @RequestBody SearchRequest searchRequest){
+        log.info("Search Fight was called. Source = {}, Destination = {}, Date = {}",
+                searchRequest.getSource(), searchRequest.getDestination(), searchRequest.getDate());
         return ResponseEntity
                 .ok(flightService.searchFlight(
                 searchRequest.getSource(),
@@ -32,8 +36,8 @@ public class FlightController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/save")
-    public ResponseEntity<String> saveFlight(@Valid
-                                             @RequestBody AddFlightRequest flight){
+    public ResponseEntity<String> saveFlight(@Valid @RequestBody AddFlightRequest flight){
+        log.info("Add flight request received for flight {}", flight.getFlightId());
         return ResponseEntity
                 .ok(flightService.addFlight(flight));
     }

@@ -9,6 +9,7 @@ import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
@@ -18,7 +19,7 @@ import java.nio.charset.StandardCharsets;
 import java.time.Duration;
 import java.util.Date;
 
-
+@Slf4j
 @Service
 public class JwtService {
 
@@ -54,9 +55,11 @@ public class JwtService {
             return extractAllClaims(token).getSubject();
         }
         catch (ExpiredJwtException e) {
+            log.warn("Jwt Token expired: {}",e.getMessage());
             throw new JwtTokenExpirationException("JWT Token expired");
         }
         catch (JwtException e) {
+            log.warn("Invalid Jwt Token: {}",e.getMessage());
             throw new InvalidJwtException("Invalid JWT Token");
         }
     }

@@ -6,6 +6,7 @@ import com.robin.flightbooking.exception.ExpiredRefreshTokenException;
 import com.robin.flightbooking.exception.InvalidRefreshTokenException;
 import com.robin.flightbooking.repository.RefreshTokenRepository;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,7 +16,7 @@ import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
-
+@Slf4j
 public class RefreshTokenService {
     private final RefreshTokenRepository refreshTokenRepository;
 
@@ -51,6 +52,7 @@ public class RefreshTokenService {
 
         if(refreshToken.getExpiryDate().isBefore(LocalDateTime.now())){  //already expired
             refreshTokenRepository.delete(refreshToken);
+            log.warn("Refresh token is expired for userId: {}", refreshToken.getUser().getUserId());
             throw new ExpiredRefreshTokenException("Refresh Token is expired. User needs to log in");
         }
 

@@ -6,25 +6,21 @@ import com.robin.flightbooking.dto.responsedto.SearchFlightsResponse;
 import com.robin.flightbooking.entities.Flight;
 import com.robin.flightbooking.exception.NoAvailableFlightsException;
 import com.robin.flightbooking.repository.FlightRepository;
+import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+@Slf4j
+@AllArgsConstructor
 @Service
 public class FlightService {
     private FlightRepository flightRepository;
 
-    public  FlightService(FlightRepository flightRepository){
-        this.flightRepository = flightRepository;
-    }
-
-
-
     public String addFlight(AddFlightRequest flight){
-
-        System.out.println("Inside add flight method in flight service");
 
         Flight flightToAdd = new Flight(
                 flight.getFlightId(),
@@ -36,16 +32,17 @@ public class FlightService {
                 flight.getBaseFare()
         );
 
-        System.out.println("created the flight to add method in flight service");
-
         flightRepository.save(flightToAdd);
-
-        System.out.println("Added the flight method in flight service");
+        log.info("Flight {} added successfully. {} -> {} on {}",
+                flight.getFlightId(), flight.getSource(), flight.getDestination(), flight.getDate());
 
         return "Flight added successfully";
     }
 
     public List<SearchFlightsResponse> searchFlight(String src, String dest, LocalDate date){
+        log.debug("Searching flights. Source={}, Destination={}, Date={}",
+                src, dest, date);
+
         List<SearchFlightsResponse> result = new ArrayList<>();
         List<Flight> allFlights = flightRepository.findAll();
 
@@ -65,10 +62,16 @@ public class FlightService {
                         flight.getBaseFare()
                 );
                 result.add(flightsResponse);
-            };
+            }
         }
 
+        log.info("Found {} flight(s) from {} to {} on {}",
+                result.size(), src, dest, date);
+
         if(result.isEmpty()){
+            log.warn("No flight Available from {} to {} on {}",
+                    src,dest,date);
+
             throw new NoAvailableFlightsException("There are no available flights available from "
                                         + src + " -> " + dest + " on " + date);
         }
